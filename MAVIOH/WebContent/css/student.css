@@ -1,0 +1,22 @@
+@import url("base.css");
+
+.studentTable {
+	width: 100%;
+	text-align: center;
+	background-color: #f8f8ff;  /* ghostwhite */
+	border: 5px solid #a9a9a9;  /* darkgray */
+	border-collapse: collapse;
+}
+
+.studentTable td {
+	border: 2px solid #a9a9a9;  /* darkgray */
+	border-collapse: collapse;
+}
+
+.studentForm {
+	display: inline-block;
+	padding: 20px;
+	background-color: #f8f8ff;  /* ghostwhite */
+	border: 5px solid #a9a9a9;  /* darkgray */
+	margin-bottom: 10px;
+}

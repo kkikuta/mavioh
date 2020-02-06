@@ -1,0 +1,13 @@
+@import url("base.css");
+
+.loginFormOuter {
+	margin-top: 90px;
+	text-align: center;  /* inner の display: inline-block; とセット */
+}
+
+.loginFormInner {
+	background-color: #f8f8ff;  /* ghostwhite */
+	padding: 5px;
+	border: 5px solid #a9a9a9;  /* darkgray */
+	display: inline-block;  /* outer の text-align: center; とセット */
+}
