@@ -12,8 +12,7 @@ public class Setting {
 
 	// DBへの接続情報
 	/** DBへの接続URL({@value}) */
-	public static final String JDBC_URL = "jdbc:h2:http://localhost:8080/MAVIOH/datebase/MAVIOH";
-	//public static final String JDBC_URL = "jdbc:h2:C:/pleiades/database/MAVIOH";
+	public static final String JDBC_URL = "jdbc:h2:C:/pleiades/database/MAVIOH";
 	/** DBへの接続時のユーザー名({@value}) */
 	public static final String DB_USER = "root";
 	/** DBへの接続時のパスワード({@value}) */
@@ -35,5 +34,9 @@ public class Setting {
 	public static final int MAX_STUDENT_NAME_LENGTH = 32;
 	/** 生徒の高校名の長さの最大値({@value}) */
 	public static final int MAX_STUDENT_SCHOOL_LENGTH = 32;
+	/** テストで指定できる問題番号の最大値 */
+	public static final int LAST_POSITION_OF_QUESTION = 1900;
+	/** テストで表示する問題の数 */
+	public static final int NUMBER_OF_QUESTION = 25;
 
 }

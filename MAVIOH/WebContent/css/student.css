@@ -20,3 +20,11 @@
 	border: 5px solid #a9a9a9;  /* darkgray */
 	margin-bottom: 10px;
 }
+
+.createLink {
+	display: inline-block;
+	padding: 20px;
+	background-color: #f8f8ff;  /* ghostwhite */
+	border: 5px solid #a9a9a9;  /* darkgray */
+	margin-bottom: 10px;
+}

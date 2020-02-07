@@ -6,7 +6,7 @@
 <html>
 <head>
 <jsp:include page="../base/head.jsp"/>
-<link rel="stylesheet" href="css/schedule.css">
+<link rel="stylesheet" href="css/student.css">
 </head>
 <body>
 <jsp:include page="../base/header.jsp" />
@@ -16,14 +16,14 @@
 	<jsp:include page="../base/mainLinks.jsp" />
 
 	<!-- 新規作成リンク -->
-	<form method="post" name="createLink" action="StudentServlet">
+	<form class="createLink" method="post" name="createLink" action="StudentServlet">
 		<input type="hidden" name="process" value="showCreatePage">
 		<a href="javascript:createLink.submit()">新規作成</a>
 	</form>
 
 	<!-- 生徒一覧 -->
 	<table class="studentTable">
-		<tr><th>氏名</th><th>学年</th><th>性別</th><th>学校</th><th>偏差値</th></tr>
+		<tr><th>名前</th><th>学年</th><th>性別</th><th>学校</th><th>偏差値</th><th>編集</th></tr>
 		<c:forEach var="student" items="${studentList}">
 			<tr>
 				<td><c:out value="${student.name}" /></td>

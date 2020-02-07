@@ -72,4 +72,21 @@ public class ValidationLogic {
 			return Result.IS_INVALID;
 		}
 	}
+
+	/**
+	 * テストの問題番号の範囲を検証する関数
+	 * @param startPosition 開始位置の番号
+	 * @param endPosition 終了位置の番号
+	 * @return 入力値の有効性
+	 */
+	public static boolean validateTestRange(int startPosition, int endPosition) {
+		if (endPosition - startPosition >= Setting.NUMBER_OF_QUESTION &&
+				startPosition > 0 && startPosition <= Setting.LAST_POSITION_OF_QUESTION &&
+				endPosition > 0 && endPosition <= Setting.LAST_POSITION_OF_QUESTION) {
+			return Result.IS_VALID;
+		}
+		else {
+			return Result.IS_INVALID;
+		}
+	}
 }
