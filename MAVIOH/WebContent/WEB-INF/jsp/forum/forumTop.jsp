@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="beans.Comment, beans.ErrorInformation" %>
+<%@ page import="beans.Comment, beans.User, java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
 <html>
 <head>
 <jsp:include page="../base/head.jsp"/>
@@ -22,7 +21,7 @@
 		タイトル <input type="text" name="title"><br>
 		コメント<br>
 		<textarea rows="7" cols="70" name="body"></textarea><br>
-		<input type="submit" value="投稿する">
+		<div class="submitButton"><input type="submit" value="投稿する"></div>
 	</form>
 
 	<!-- コメント一覧 -->
@@ -35,7 +34,13 @@
 				<c:out value="${comment.body}" />
 			</div>
 			<div class="userIdAndPostTime">
-				<c:out value="${comment.userId}" />　:　
+
+				<c:forEach var="user" items="${userList}">
+					<c:if test="${comment.userId == user.id}">
+						<c:out value="${user.name}" />　:　
+					</c:if>
+				</c:forEach>
+
 				<c:out value="${comment.postTime}" />
 			</div>
 		</div>

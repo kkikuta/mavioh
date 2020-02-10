@@ -8,6 +8,10 @@
 	display: inline-block;  /* outer の text-align: center; とセット */
 }
 
+.createCommentForm .submitButton {
+	margin-top: 5px;
+}
+
 .commentBox {
 	background-color: #f8f8ff;  /* ghostwhite */
 	padding: 10px;
@@ -25,3 +29,5 @@
 .userIdAndPostTime {
 	text-align: right;
 }
+
+

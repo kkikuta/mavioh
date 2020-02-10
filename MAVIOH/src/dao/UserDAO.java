@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import beans.User;
 import resource.DBStatus;
@@ -47,6 +49,46 @@ public class UserDAO {
 			else {
 				return null;
 			}
+
+		}  // DBに接続できない場合
+		catch (SQLException sqlException) {
+			sqlException.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 全ユーザー関数
+	 * @return 全ユーザーのリスト
+	 */
+	public static List<User> readAll() {
+		List<User> userList = new ArrayList<>();
+		// DBに接続
+		try (Connection connection = DriverManager.getConnection(
+				Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
+			// SQL分を用意
+			String sql = "SELECT * FROM USERS";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+			// 検索
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			// ユーザーが見つかった場合
+			while (resultSet.next() == DBStatus.RECORD_EXIST) {
+				int id = resultSet.getInt("ID");
+				String name = resultSet.getString("NAME");
+				String password = resultSet.getString("password");
+
+				User user = new User(id, name, password);
+				userList.add(user);
+
+				//#############################################
+				for (User userD : userList) {
+					System.out.println(userD.getId());
+					System.out.println(userD.getName());
+				}
+			}
+			return userList;
 
 		}  // DBに接続できない場合
 		catch (SQLException sqlException) {

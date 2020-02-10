@@ -2,6 +2,7 @@
 
 .monthlyCalendar {
 	width: 100%;
+	margin-bottom: 10px;
 	text-align: center;
 	background-color: #f8f8ff;  /* ghostwhite */
 	border: 5px solid #a9a9a9;  /* darkgray */

@@ -27,7 +27,7 @@ public class ForumServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// コメント一覧の読みだしに成功した場合
-		if (ForumLogic.readAll(request) == ExitStatus.NORMAL) {
+		if (ForumLogic.setCommentList(request) == ExitStatus.NORMAL) {
 			// 掲示板トップ画面へフォワード
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/forum/forumTop.jsp");
 			requestDispatcher.forward(request, response);
@@ -43,12 +43,11 @@ public class ForumServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (ForumLogic.create(request) == ExitStatus.NORMAL) {
-			// 掲示板画面を表示するため、doGet関数を呼び出すようにリダイレクト
-			response.sendRedirect("ForumServlet");
+			doGet(request, response);
 		}
 		else {
-			// 掲示板トップ画面へフォワード
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/forum/forumTop.jsp");
+			// エラー画面へフォワード
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher(Setting.ERROR_URL);
 			requestDispatcher.forward(request, response);
 		}
 

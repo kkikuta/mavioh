@@ -11,6 +11,7 @@ import beans.Comment;
 import beans.ErrorInformation;
 import beans.User;
 import dao.CommentDAO;
+import dao.UserDAO;
 import resource.ExitStatus;
 import setting.Setting;
 
@@ -61,19 +62,24 @@ public class ForumLogic {
 	}
 
 	/**
-	 * 全コメントを読み込む関数
+	 * 全コメントをスコープに保存する関数
 	 * @param request HttpServletReuqest
 	 * @return 関数の終了ステータス
 	 */
-	public static boolean readAll(HttpServletRequest request) {
+	public static boolean setCommentList(HttpServletRequest request) {
 		// DBから全コメントを取得
 		List<Comment> commentList = CommentDAO.findAll();
+		// DBから全ユーザーを取得
+		List<User> userList = UserDAO.readAll();
 
 		// SQLの実行に成功した場合
-		if (commentList != null) {
+		if (commentList != null && userList != null) {
 			// 全コメントをスコープに保存
 			HttpSession session = request.getSession();
 			session.setAttribute("commentList", commentList);
+
+			// コメントを投稿したユーザー名をスコープに保存
+			session.setAttribute("userList", userList);
 
 			return ExitStatus.NORMAL;
 		}
