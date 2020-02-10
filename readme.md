@@ -20,9 +20,9 @@
 
 # Requirement
 
-jstl-api-1.2
-jstl-impl-1.2
-postgresql-42.2.10
+・jstl-api-1.2
+・jstl-impl-1.2
+・postgresql-42.2.10
 
 # Installation
 
@@ -51,10 +51,6 @@ https://jdbc.postgresql.org/download.html
 
 # Author
 
-作成情報を列挙する
-
 * 菊田洸一
 * 立教大学 コミュニティ福祉学部福祉学科
 * kkikuta9873@outlook.jp
-
-# License
