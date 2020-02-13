@@ -3,7 +3,6 @@ package model;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import beans.ErrorInformation;
 import beans.User;
 import dao.UserDAO;
 import resource.ExitStatus;
@@ -20,24 +19,20 @@ public class LoginLogic {
 	 * @return 関数の終了ステータス
 	 */
 	public static boolean login(HttpServletRequest request) {
-		// フォームに入力されたデータを取得
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
 
-		// ユーザーを検索して結果を返す
 		User user = UserDAO.find(userName, password);
 
+		// ユーザーが見つかった場合(ログインできる場合)
 		if (user != null) {
-			// スコープにログイン中のユーザーとして保存
 			HttpSession session = request.getSession();
 			session.setAttribute("loginUser", user);
 
 			return ExitStatus.NORMAL;
 		}
 		else {
-			// エラーメッセージをスコープに保存
-			ErrorInformation errorInformation = new ErrorInformation("入力内容に誤りがあります。");
-			request.setAttribute("errorInformation", errorInformation);
+			ErrorLogic.setErrorInformation(request, "ユーザー名またはパスワードが違います。");
 
 			return ExitStatus.ABNORMAL;
 		}

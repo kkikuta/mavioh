@@ -1,6 +1,6 @@
 package model;
 
-import resource.Result;
+import resource.ExitStatus;
 import setting.Setting;
 
 /**
@@ -16,9 +16,9 @@ public class ValidationLogic {
 	 */
 	public static boolean validateLength(String value, int maximumLength) {
 		if (value.length() > maximumLength) {
-			return Result.IS_INVALID;
+			return ExitStatus.ABNORMAL;
 		}
-		return Result.IS_VALID;
+		return ExitStatus.NORMAL;
 	}
 
 	/**
@@ -28,9 +28,9 @@ public class ValidationLogic {
 	 */
 	public static boolean validateInput(String value) {
 		if (value.isEmpty() == true) {
-			return Result.IS_INVALID;
+			return ExitStatus.ABNORMAL;
 		}
-		return Result.IS_VALID;
+		return ExitStatus.NORMAL;
 	}
 
 	/**
@@ -41,10 +41,26 @@ public class ValidationLogic {
 	 */
 	public static boolean validate(String value, int maximumLength) {
 		// 入力値を検証
-		if (validateInput(value) == Result.IS_INVALID || validateLength(value, maximumLength) == Result.IS_INVALID) {
-			return Result.IS_INVALID;
+		if (validateInput(value) == ExitStatus.ABNORMAL || validateLength(value, maximumLength) == ExitStatus.ABNORMAL) {
+			return ExitStatus.ABNORMAL;
 		}
-		return Result.IS_VALID;
+		return ExitStatus.NORMAL;
+	}
+
+	/**
+	 * 個目との入力値を検証する関数
+	 * @param title タイトル
+	 * @param body コメント本文
+	 * @return 入力値の有効性
+	 */
+	public static boolean validateComment(String title, String body) {
+		if (validate(title, Setting.MAX_COMMENT_TITLE_LENGTH) == ExitStatus.NORMAL &&
+				validate(body, Setting.MAX_COMMENT_BODY_LENGTH) == ExitStatus.NORMAL) {
+			return ExitStatus.NORMAL;
+		}
+		else {
+			return ExitStatus.ABNORMAL;
+		}
 	}
 
 	/**
@@ -54,22 +70,28 @@ public class ValidationLogic {
 	 * @return 入力値の有効性
 	 */
 	public static boolean validateEvent(String title, String detail) {
-		if (validate(title, Setting.MAX_EVENT_TITLE_LENGTH) == Result.IS_VALID &&
-				validate(title, Setting.MAX_EVENT_DETAIL_LENGTH) == Result.IS_VALID) {
-			return Result.IS_VALID;
+		if (validate(title, Setting.MAX_EVENT_TITLE_LENGTH) == ExitStatus.NORMAL &&
+				validate(title, Setting.MAX_EVENT_DETAIL_LENGTH) == ExitStatus.NORMAL) {
+			return ExitStatus.NORMAL;
 		}
 		else {
-			return Result.IS_INVALID;
+			return ExitStatus.ABNORMAL;
 		}
 	}
 
+	/**
+	 * 生徒情報の入力値を検証する関数
+	 * @param 名前 生徒の名前
+	 * @param school 高校名
+	 * @return 入力値の有効性
+	 */
 	public static boolean validateStudent(String name, String school) {
-		if (validate(name, Setting.MAX_STUDENT_NAME_LENGTH) == Result.IS_VALID &&
-				validate(school, Setting.MAX_STUDENT_SCHOOL_LENGTH) == Result.IS_VALID) {
-			return Result.IS_VALID;
+		if (validate(name, Setting.MAX_STUDENT_NAME_LENGTH) == ExitStatus.NORMAL &&
+				validate(school, Setting.MAX_STUDENT_SCHOOL_LENGTH) == ExitStatus.NORMAL) {
+			return ExitStatus.NORMAL;
 		}
 		else {
-			return Result.IS_INVALID;
+			return ExitStatus.ABNORMAL;
 		}
 	}
 
@@ -80,13 +102,13 @@ public class ValidationLogic {
 	 * @return 入力値の有効性
 	 */
 	public static boolean validateTestRange(int startPosition, int endPosition) {
-		if (endPosition - startPosition >= Setting.NUMBER_OF_QUESTION &&
+		if (endPosition - startPosition + 1 >= Setting.NUMBER_OF_QUESTION &&
 				startPosition > 0 && startPosition <= Setting.LAST_POSITION_OF_QUESTION &&
 				endPosition > 0 && endPosition <= Setting.LAST_POSITION_OF_QUESTION) {
-			return Result.IS_VALID;
+			return ExitStatus.NORMAL;
 		}
 		else {
-			return Result.IS_INVALID;
+			return ExitStatus.ABNORMAL;
 		}
 	}
 }

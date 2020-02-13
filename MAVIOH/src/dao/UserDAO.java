@@ -25,23 +25,17 @@ public class UserDAO {
 	 * @return 指定したユーザーが存在するか
 	 */
 	public static User find(String userName, String password) {
-		// DBに接続
-		try (Connection connection = DriverManager.getConnection(
-				Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
-			// SQL分を用意
-			String sql = "SELECT * FROM USERS WHERE name = ? AND password = ?";
+		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
+			String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, userName);
 			preparedStatement.setString(2, password);
 
-			// 検索
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			// ユーザーが見つかった場合
 			if (resultSet.next() == DBStatus.RECORD_EXIST) {
-				// 不足しているレコードを取得
 				int id = resultSet.getInt("ID");
-
 				User user = new User(id, userName, password);
 
 				return user;
@@ -50,7 +44,7 @@ public class UserDAO {
 				return null;
 			}
 
-		}  // DBに接続できない場合
+		}
 		catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			return null;
@@ -62,18 +56,15 @@ public class UserDAO {
 	 * @return 全ユーザーのリスト
 	 */
 	public static List<User> readAll() {
-		List<User> userList = new ArrayList<>();
-		// DBに接続
-		try (Connection connection = DriverManager.getConnection(
-				Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
-			// SQL分を用意
+		List<User> userList = new ArrayList<>();  // 全ユーザーを格納するリスト
+
+		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
 			String sql = "SELECT * FROM USERS";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-			// 検索
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// ユーザーが見つかった場合
+			// 取得した全ユーザーを格納
 			while (resultSet.next() == DBStatus.RECORD_EXIST) {
 				int id = resultSet.getInt("ID");
 				String name = resultSet.getString("NAME");
@@ -81,16 +72,9 @@ public class UserDAO {
 
 				User user = new User(id, name, password);
 				userList.add(user);
-
-				//#############################################
-				for (User userD : userList) {
-					System.out.println(userD.getId());
-					System.out.println(userD.getName());
-				}
 			}
 			return userList;
-
-		}  // DBに接続できない場合
+		}
 		catch (SQLException sqlException) {
 			sqlException.printStackTrace();
 			return null;

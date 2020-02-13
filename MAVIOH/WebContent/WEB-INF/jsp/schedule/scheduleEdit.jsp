@@ -1,37 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="beans.OneDaySchedule" %>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../base/head.jsp"/>
-<link rel="stylesheet" href="css/schedule.css">
+<jsp:include page="../layout/head.jsp" />
+<link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-<jsp:include page="../base/header.jsp" />
+<jsp:include page="../layout/header.jsp" />
 <div class="mainContent">
+	<jsp:include page="../layout/mainLinks.jsp" />
 
-	<!-- メインのリンク -->
-	<jsp:include page="../base/mainLinks.jsp" />
+	<!-- 表示中のイベントの日にち -->
+	<c:out value="${event.date}" /><br>
 
-	<!-- イベントフォームを表示 -->
-	<form class="scheduleForm" action="ScheduleServlet" method="post">
+	<!-- イベント詳細 -->
+	<c:out value="${event.title}" /><br>
+	<c:out value="${event.detail}" /><br>
+
+	<!-- 編集リンク -->
+	<form class="postForm" name="editLink" action="ScheduleServlet" method="post">
+		<jsp:include page="../error/errorInformation.jsp" />
 		<input type="hidden" name="process" value="executeEdit">
-		<input type="hidden" name="date" value="${oldEvent.date}">
-
-		<!-- イベント内容の入力欄の表示 -->
-		タイトル <input type="text" name="title" value="${oldEvent.title}"><br>
-		詳細<br>
-		<textarea name="detail" cols="70" rows="7">${oldEvent.detail}</textarea><br>
-		<input type="submit" value="更新">
-	</form>
-
-	<!-- 削除フォーム -->
-	<form class="scheduleForm" action="ScheduleServlet" method="post">
-		<input type="hidden" name="process" value="executeDelete">
-		<input type="hidden" name="id" value="${oldEvent.id}">
-		<input type="submit" value="削除">
+		<input type="hidden" name="id" value="${event.id}">
+		<input type="text" name="title" value="${event.title}"><br>
+		<textarea name="detail" rows="7" cols="70" ><c:out value="${event.detail}" /></textarea><br>
+		<a href="javascript:editLink.submit()">保存</a>
 	</form>
 
 </div>

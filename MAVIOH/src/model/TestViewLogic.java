@@ -9,8 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import beans.WordData;
 import resource.ExitStatus;
-import resource.Result;
 import resource.WordsAndMeanings;
+import setting.Setting;
 
 /**
  * テストに関する処理をするモデル
@@ -23,23 +23,26 @@ public class TestViewLogic {
 	 * @param endPosition テストの終了位置の番号
 	 * @return 関数の終了ステータス
 	 */
-	public static boolean setTestData(HttpServletRequest request) {
+	public static boolean prepareTest(HttpServletRequest request) {
 		List<WordData> wordDataList = new ArrayList<>();
 		List<Integer> usedNumbers = new ArrayList<>();
 		int startPosition;
 		int endPosition;
 
-		// 入力されていない場合
 		if (request.getParameter("startPosition") == null || request.getParameter("endPosition") == null) {
+			ErrorLogic.setErrorInformation(request, "範囲が入力されていません。");
+
 			return ExitStatus.ABNORMAL;
 		}
 		else {
 			startPosition = Integer.parseInt(request.getParameter("startPosition"));
 			endPosition = Integer.parseInt(request.getParameter("endPosition"));
-			// 入力された範囲が正しくない場合
-			if (ValidationLogic.validateTestRange(startPosition, endPosition) == Result.IS_INVALID) {
+
+			if (ValidationLogic.validateTestRange(startPosition, endPosition) == ExitStatus.ABNORMAL) {
+				ErrorLogic.setErrorInformation(request, "入力が不正です。1～1900の中の範囲で入力してください。");
+
 				return ExitStatus.ABNORMAL;
-			}  // 入力値が正しい場合
+			}  // 入力値が正しい場合、単語テスト用のデータを用意して保存
 			else {
 				int number = 1;
 
@@ -50,12 +53,11 @@ public class TestViewLogic {
 					// 同じ単語ならスキップ
 					if (usedNumbers.contains(Integer.valueOf(randomNumber))) {
 						continue;
-					} else {
-						// 単語とその意味を取得
+					}
+					else {
 						String word = WordsAndMeanings.words[randomNumber];
 						String meaning = WordsAndMeanings.meanings[randomNumber];
 
-						// インスタンスを生成して格納
 						WordData wd = new WordData(number, word, meaning);
 						wordDataList.add(wd);
 						usedNumbers.add(Integer.valueOf(randomNumber));
@@ -63,7 +65,7 @@ public class TestViewLogic {
 						number++;
 
 						// 指定の個数やったら終了
-						if (wordDataList.size() >= 25) {
+						if (wordDataList.size() >= Setting.NUMBER_OF_QUESTION) {
 							break;
 						}
 					}

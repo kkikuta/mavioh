@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.ErrorLogic;
 import model.LoginLogic;
 import resource.ExitStatus;
 
@@ -22,24 +23,26 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 使用しない
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+		requestDispatcher.forward(request, response);
+	}
 
 	/**
-	 * ログインに関する処理を行う関数
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// ログインに成功した場合
 		if (LoginLogic.login(request) == ExitStatus.NORMAL) {
-			// ログイン結果画面へフォワード
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/login/loginResult.jsp");
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/welcome/welcome.jsp");
 			requestDispatcher.forward(request, response);
-		}  // ログインに失敗した場合
+		}
+		else if (ErrorLogic.isNormalError(request) == true) {
+			doGet(request, response);
+		}
 		else {
-			// ログイン画面へフォワード
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-			requestDispatcher.forward(request, response);
+			response.sendRedirect("ErrorServlet");
 		}
 	}
 

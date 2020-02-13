@@ -1,19 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../base/head.jsp"/>
+<jsp:include page="../layout/head.jsp" />
 </head>
 <body>
-<h1>英単語テスト解答</h1>
 <div class="mainContent">
 
-	<!-- メインのリンク -->
-	<jsp:include page="../base/mainLinks.jsp" />
+	<!-- テスト本体 -->
+	<h1>英単語テスト</h1>
 
-	<!-- テストを表示 -->
 	<table>
 		<c:forEach var="wordData" items="${wordDataList}">
 			<tr>
@@ -26,7 +24,7 @@
 
 	<!-- 問題へのリンク -->
 	<form action="TestViewServlet" method="post">
-		<input type="hidden" name="process" value="showQuestion">
+		<input type="hidden" name="process" value="showQuestionPage">
 		<input type="submit" value="問題へ">
 	</form>
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /**
- * ログイン認証時に使用するユーザーを表すJavaBeans
+ * ユーザーを表すJavaBeans
  * @author kkiku
  */
 public class User implements Serializable {

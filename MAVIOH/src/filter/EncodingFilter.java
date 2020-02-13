@@ -17,7 +17,6 @@ import setting.Setting;
 /**
  * 入力値のエンコーディングを行うフィルター
  * @author kkiku
- *
  */
 @WebFilter("/*")
 public class EncodingFilter implements Filter {
@@ -30,9 +29,7 @@ public class EncodingFilter implements Filter {
 	 * 入力値のエンコードを行う関数
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// エンコード
 		((HttpServletRequest)request).setCharacterEncoding(Setting.CHARACTER_CODE);
-
 		chain.doFilter(request, response);
 	}
 

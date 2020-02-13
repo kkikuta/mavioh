@@ -1,52 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="beans.OneDaySchedule, beans.ErrorInformation" %>
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="../base/head.jsp"/>
-<link rel="stylesheet" href="css/schedule.css">
+<jsp:include page="../layout/head.jsp" />
+<link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-<jsp:include page="../base/header.jsp" />
+<jsp:include page="../layout/header.jsp" />
 <div class="mainContent">
+	<jsp:include page="../layout/mainLinks.jsp" />
 
-	<!-- メインのリンク -->
-	<jsp:include page="../base/mainLinks.jsp" />
-
-
-	<!-- イベントフォームを表示 -->
-	<form class="scheduleForm" action="ScheduleServlet" method="post">
+	<!-- 新規作成フォーム -->
+	<form class="postForm" name="createLink" action="ScheduleServlet" method="post" >
+		<jsp:include page="../error/errorInformation.jsp" />
 		<input type="hidden" name="process" value="executeCreate">
-
-		<!-- 年の選択肢を表示 -->
+		<input type="hidden" name="id" value="${event.id}">
 		<select name="year">
 			<% for (int i = 2020; i < 2023; i++) { %>
 				<option value="<%= i %>"><%= i %></option>
 			<% } %>
 		</select>年
-
-		<!-- 月の選択肢を表示 -->
 		<select name="month">
-		<% for (int i = 1; i < 13; i++) { %>
-			<option value="<%= i %>"><%= i %></option>
-		<% } %>
-		</select>月
-
-		<!-- 日にちの選択肢を表示 -->
-		<select name="date">
-			<% for (int i = 1; i < 32; i++) { %>
+			<% for (int i = 1; i < 13; i++) { %>
 				<option value="<%= i %>"><%= i %></option>
 			<% } %>
-		</select>日
-		<br>
-
-		<!-- イベント内容の入力欄の表示 -->
-		タイトル <input type="text" name="title"><br>
+		</select>月
+		<input type="text" name="date">日<br>
+		タイトル<input type="text" name="title"><br>
 		詳細<br>
-		<textarea name="detail" cols="70" rows="7"></textarea><br>
-		<input type="submit" value="更新">
+		<textarea name="detail" rows="7" cols="70" ></textarea><br>
+		<a href="javascript:createLink.submit()">保存</a>
 	</form>
 
 </div>

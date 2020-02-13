@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import beans.Event;
 import resource.DBStatus;
@@ -25,14 +27,39 @@ public class EventDAO {
 	public static boolean create(Event event) {
 		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
 
-			// SQL文を用意
-			String sql = "INSERT INTO EVENTS (TITLE, DETAIL, DATE) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO events (title, detail, date) VALUES (?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, event.getTitle());
 			preparedStatement.setString(2, event.getDetail());
 			preparedStatement.setDate(3, event.getDate());
 
-			// SQL文を実行
+			int resultSet = preparedStatement.executeUpdate();
+
+			if (resultSet == DBStatus.UPDATE_SUCCESS) {
+				return ExitStatus.NORMAL;
+			}
+			else {
+				return ExitStatus.ABNORMAL;
+			}
+		}
+		catch (SQLException exception) {
+			exception.printStackTrace();
+			return ExitStatus.ABNORMAL;
+		}
+	}
+
+	/**
+	 * DBのイベントを削除する関数
+	 * @param id
+	 * @return
+	 */
+	public static boolean delete(int id) {
+		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
+
+			String sql = "DELETE FROM events WHERE id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+
 			int resultSet = preparedStatement.executeUpdate();
 
 			if (resultSet == DBStatus.UPDATE_SUCCESS) {
@@ -56,14 +83,12 @@ public class EventDAO {
 	public static boolean update(Event event) {
 		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
 
-			// SQL文を用意
-			String sql = "UPDATE EVENTS SET TITLE=?, DETAIL=? WHERE DATE=?";
+			String sql = "UPDATE events SET title = ?, detail = ? WHERE id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, event.getTitle());
 			preparedStatement.setString(2, event.getDetail());
-			preparedStatement.setDate(3, event.getDate());
+			preparedStatement.setInt(3, event.getId());
 
-			// SQL文を実行
 			int result = preparedStatement.executeUpdate();
 
 			if (result == DBStatus.UPDATE_SUCCESS) {
@@ -84,39 +109,37 @@ public class EventDAO {
 	 * @param year 年
 	 * @param month 月
 	 * @param date 日
-	 * @return イベントまたはイベントが見つからなければ null
+	 * @return イベントのリスト
 	 */
-	public static Event read(int year, int month, int date) {
+	public static List<Event> read(int year, int month, int date) {
 		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
+
+			List<Event> eventList = new ArrayList<>();
 
 			// DBの日付に対応する書式の文字列を作成
 			final String format = "%4d-%02d-%02d";
 			String stringDate = String.format(format, year, month, date);
+			Date sqlDateForSQL = Date.valueOf(stringDate);
 
-			// SQL文を用意
-			String sql = "SELECT * FROM EVENTS WHERE DATE >= ? AND DATE <= ?";
+			String sql = "SELECT * FROM events WHERE date >= ? AND date <= ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, stringDate);
-			preparedStatement.setString(2, stringDate);
+			preparedStatement.setDate(1, sqlDateForSQL);
+			preparedStatement.setDate(2, sqlDateForSQL);
 
-			// SQL文を実行
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// 検索結果を配列に格納する
-			if (resultSet.next() == DBStatus.RECORD_EXIST) {
-				int id = resultSet.getInt("ID");
-				String title = resultSet.getString("TITLE");
-				String detail = resultSet.getString("DETAIL");
-				Date sqlDate= resultSet.getDate("DATE");
+			while (resultSet.next() == DBStatus.RECORD_EXIST) {
+				int id = resultSet.getInt("id");
+				String title = resultSet.getString("title");
+				String detail = resultSet.getString("detail");
+				Date sqlDate= resultSet.getDate("date");
 
 				Event event = new Event(id, title, detail, sqlDate);
 
-				return event;
-			}  // イベントがない場合
-			else {
-				return null;
+				eventList.add(event);
 			}
 
+			return eventList;
 		}
 		catch (SQLException exception) {
 			exception.printStackTrace();
@@ -132,15 +155,12 @@ public class EventDAO {
 	public static Event read(int id) {
 		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
 
-			// SQL文を用意
 			String sql = "SELECT * FROM EVENTS WHERE ID=?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 
-			// SQL文を実行
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// 検索結果を配列に格納する
 			if (resultSet.next() == DBStatus.RECORD_EXIST) {
 				String title = resultSet.getString("TITLE");
 				String detail = resultSet.getString("DETAIL");
@@ -149,44 +169,14 @@ public class EventDAO {
 				Event oldEvent = new Event(id, title, detail, date);
 
 				return oldEvent;
-			}  // イベントがない場合
+			}
 			else {
 				return null;
 			}
-
 		}
 		catch (SQLException exception) {
 			exception.printStackTrace();
 			return null;
-		}
-	}
-
-	/**
-	 * DBのイベントを削除する関数
-	 * @param id
-	 * @return
-	 */
-	public static boolean delete(int id) {
-		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
-
-			// SQL文を用意
-			String sql = "DELETE FROM EVENTS WHERE ID=?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, id);
-
-			// SQL文を実行
-			int resultSet = preparedStatement.executeUpdate();
-
-			if (resultSet == DBStatus.UPDATE_SUCCESS) {
-				return ExitStatus.NORMAL;
-			}
-			else {
-				return ExitStatus.ABNORMAL;
-			}
-		}
-		catch (SQLException exception) {
-			exception.printStackTrace();
-			return ExitStatus.ABNORMAL;
 		}
 	}
 

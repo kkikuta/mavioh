@@ -18,7 +18,7 @@ public class Student implements Serializable {
 	/** 高校名 */
 	private String school;
 	/** 偏差値 */
-	private double deviationValue;
+	private float deviationValue;
 
 	/**
 	 * コンストラクタ
@@ -33,7 +33,7 @@ public class Student implements Serializable {
 	 * @param school 高校名
 	 * @param deviationValue 偏差値
 	 */
-	public Student(int id, String name, int grade, int gender, String school, double deviationValue) {
+	public Student(int id, String name, int grade, int gender, String school, float deviationValue) {
 		this.setId(id);
 		this.setName(name);
 		this.setGrade(grade);
@@ -105,13 +105,13 @@ public class Student implements Serializable {
 	/**
 	 * @return deviationValue
 	 */
-	public double getDeviationValue() {
+	public float getDeviationValue() {
 		return deviationValue;
 	}
 	/**
 	 * @param deviationValue セットする deviationValue
 	 */
-	public void setDeviationValue(double deviationValue) {
+	public void setDeviationValue(float deviationValue) {
 		this.deviationValue = deviationValue;
 	}
 

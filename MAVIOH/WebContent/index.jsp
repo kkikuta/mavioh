@@ -3,17 +3,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="WEB-INF/jsp/base/head.jsp" />
-<link rel="stylesheet" href="css/index.css">
+<jsp:include page="WEB-INF/jsp/layout/head.jsp" />
+<link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-<jsp:include page="WEB-INF/jsp/base/header.jsp" />
+<jsp:include page="WEB-INF/jsp/layout/header.jsp" />
 <div class="mainContent">
 
 	<!-- ログインフォーム -->
-	<div class="loginFormOuter">
-		<form class="loginFormInner" action="LoginServlet" method="post">
-			<jsp:include page="WEB-INF/jsp/base/errorInformation.jsp" />
+	<div class="centerBoxOuter">
+		<form class="centerBoxInner" action="LoginServlet" method="post">
+			<jsp:include page="WEB-INF/jsp/error/errorInformation.jsp" />
 			ユーザー名 <input type="text" name="userName"><br>
 			パスワード <input type="password" name="password"><br>
 			<input type="submit" value="ログイン">

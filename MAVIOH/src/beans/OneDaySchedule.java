@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -8,16 +9,12 @@ import java.io.Serializable;
  * @author kkiku
  */
 public class OneDaySchedule implements Serializable {
-	/** 年 */
-	private int year;
-	/** 月 */
-	private int month;
 	/** 日にち */
 	private int date;
 	/** 曜日 */
 	private String dayOfWeek;
 	/** イベント */
-	private Event event;
+	private List<Event> eventList;
 
 	/**
 	 * コンストラクタ
@@ -31,37 +28,12 @@ public class OneDaySchedule implements Serializable {
 	 * @param dayOfWeek 曜日
 	 * @param event イベント
 	 */
-	public OneDaySchedule(int year, int month, int date, String dayOfWeek, Event event) {
-		this.setYear(year);
-		this.setMonth(month);
+	public OneDaySchedule(int date, String dayOfWeek, List<Event> eventList) {
 		this.setDate(date);
 		this.setDayOfWeek(dayOfWeek);
-		this.setEvent(event);
+		this.setEventList(eventList);
 	}
-	/**
-	 * @return year
-	 */
-	public int getYear() {
-		return year;
-	}
-	/**
-	 * @param year セットする year
-	 */
-	public void setYear(int year) {
-		this.year = year;
-	}
-	/**
-	 * @return month
-	 */
-	public int getMonth() {
-		return month;
-	}
-	/**
-	 * @param month セットする month
-	 */
-	public void setMonth(int month) {
-		this.month = month;
-	}
+
 	/**
 	 * @return date
 	 */
@@ -89,14 +61,14 @@ public class OneDaySchedule implements Serializable {
 	/**
 	 * @return event
 	 */
-	public Event getEvent() {
-		return event;
+	public List<Event> getEventList() {
+		return eventList;
 	}
 	/**
 	 * @param event セットする event
 	 */
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setEventList(List<Event> eventList) {
+		this.eventList = eventList;
 	}
 
 

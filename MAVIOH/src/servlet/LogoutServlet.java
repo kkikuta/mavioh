@@ -8,7 +8,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
+import model.LogoutLogic;
+import resource.ExitStatus;
 
 
 /**
@@ -20,21 +22,23 @@ public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * ログアウトする関数
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// スコープからログイン中のユーザーを削除
-		HttpSession session = request.getSession();
-		session.removeAttribute("loginUser");
-
-		// ログイン画面へフォワード
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-		requestDispatcher.forward(request, response);
+		if (LogoutLogic.logout(request) == ExitStatus.NORMAL) {
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+			requestDispatcher.forward(request, response);
+		}
+		else {
+			//TODO エラー時の処理
+		}
 	}
 
 	/**
-	 * 使用しない
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { }
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 使用しない
+	}
 
 }

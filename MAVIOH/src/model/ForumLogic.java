@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import beans.Comment;
-import beans.ErrorInformation;
 import beans.User;
 import dao.CommentDAO;
 import dao.UserDAO;
@@ -28,34 +27,30 @@ public class ForumLogic {
 	 * @return 関数の終了ステータス
 	 */
 	public static boolean create(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-
-		// 入力されたデータを取得する
 		String title = request.getParameter("title");
 		String body = request.getParameter("body");
 
-		ErrorInformation errorInformation = new ErrorInformation();  // エラー情報
+		if (ValidationLogic.validateComment(title, body) == ExitStatus.NORMAL) {
+			HttpSession session = request.getSession();
 
-		// 入力値のチェック
-		if (ValidationLogic.validate(title, Setting.MAX_COMMENT_TITLE_LENGTH) == ExitStatus.NORMAL &&
-				ValidationLogic.validate(body, Setting.MAX_COMMENT_BODY_LENGTH) == ExitStatus.ABNORMAL) {
-			// 投稿したユーザーのidを取得する
+			// 投稿したユーザーのidを取得
 			User loginUser = (User) session.getAttribute("loginUser");
 			int userId = loginUser.getId();
 
-			// 投稿日時を取得する
+			// 投稿日時を取得
 			LocalDateTime localDateTime = LocalDateTime.now();
 			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH時mm分");
 			String postTime = dateTimeFormatter.format(localDateTime);
 
-			// コメントをDBに保存する (第一引数(主キー)は指定する必要がないため、仮の数)
+			// 第一引数(主キー)は指定する必要がないため、仮の数
 			Comment comment = new Comment(-1, title, body, userId, postTime);
 
 			return CommentDAO.create(comment);
 		}
 		else {
-			// エラーメッセージを保存
-			request.setAttribute("errorInformation", errorInformation);
+			ErrorLogic.setErrorInformation(
+					request, "文字数が不正です。タイトルは" + Setting.MAX_COMMENT_TITLE_LENGTH + "文字以内、コメントは" +
+					Setting.MAX_COMMENT_BODY_LENGTH + "文字以内で入力してください。");
 
 			return ExitStatus.ABNORMAL;
 		}
@@ -66,19 +61,15 @@ public class ForumLogic {
 	 * @param request HttpServletReuqest
 	 * @return 関数の終了ステータス
 	 */
-	public static boolean setCommentList(HttpServletRequest request) {
-		// DBから全コメントを取得
-		List<Comment> commentList = CommentDAO.findAll();
-		// DBから全ユーザーを取得
-		List<User> userList = UserDAO.readAll();
+	public static boolean prepareCommentList(HttpServletRequest request) {
+		List<Comment> commentList = CommentDAO.findAll();  // コメント本体
+		List<User> userList = UserDAO.readAll();  // コメントの投稿者
 
 		// SQLの実行に成功した場合
 		if (commentList != null && userList != null) {
-			// 全コメントをスコープに保存
 			HttpSession session = request.getSession();
-			session.setAttribute("commentList", commentList);
 
-			// コメントを投稿したユーザー名をスコープに保存
+			session.setAttribute("commentList", commentList);
 			session.setAttribute("userList", userList);
 
 			return ExitStatus.NORMAL;

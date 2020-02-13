@@ -12,11 +12,15 @@ public class Setting {
 
 	// DBへの接続情報
 	/** DBへの接続URL({@value}) */
-	public static final String JDBC_URL = "jdbc:h2:C:/pleiades/database/MAVIOH";
+	public static final String JDBC_URL = "jdbc:postgresql://ec2-184-72-235-159.compute-1.amazonaws.com:5432/d8qejs8r8gc4q";
+	//public static final String JDBC_URL = "jdbc:h2:C:/pleiades/database/MAVIOH";
 	/** DBへの接続時のユーザー名({@value}) */
-	public static final String DB_USER = "root";
+	public static final String DB_USER = "iyxltwhsqxuyqb";
+	//public static final String DB_USER = "root";
 	/** DBへの接続時のパスワード({@value}) */
-	public static final String DB_PASSWORD = "";
+	public static final String DB_PASSWORD = "156598e79afc61725fab4e61184d5f5c870d8ea802ec47d38aeeb27558a088b5";
+	//public static final String DB_PASSWORD = "";
+
 
 	/** エラー時の遷移先URL({@value}) */
 	public static final String ERROR_URL = "/WEB-INF/jsp/error/error.jsp";

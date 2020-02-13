@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.ErrorLogic;
 import model.TestViewLogic;
 import resource.ExitStatus;
 
 /**
- * テストに関する処理を行うサーブレット
+ * テストに関する処理を行うコントローラ
  * @author kkiku
  */
 @WebServlet("/TestViewServlet")
@@ -21,7 +22,7 @@ public class TestViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * テスト作成フォームを表示する関数
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/testView/testViewTop.jsp");
@@ -29,26 +30,29 @@ public class TestViewServlet extends HttpServlet {
 	}
 
 	/**
-	 * テストページを表示する関数
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String process = request.getParameter("process");
 
-		if (process.equals("showTest")) {
-			//# ここでテスト用のデータをスコープに保存
-			if (TestViewLogic.setTestData(request) == ExitStatus.NORMAL) {
+		if (process.equals("createTest")) {
+			if (TestViewLogic.prepareTest(request) == ExitStatus.NORMAL) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/testView/testViewQuestion.jsp");
 				requestDispatcher.forward(request, response);
 			}
+			else if (ErrorLogic.isNormalError(request) == true) {
+				doGet(request, response);
+			}
 		}
-		else if (process.equals("showQuestion")) {
+		else if (process.equals("showQuestionPage")) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/testView/testViewQuestion.jsp");
 			requestDispatcher.forward(request, response);
 		}
-		else if (process.equals("showAnswer")) {
+		else if (process.equals("showAnswerPage")) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/testView/testViewAnswer.jsp");
 			requestDispatcher.forward(request, response);
 		}
+		response.sendRedirect("ErrorServlet");
 	}
 
 }

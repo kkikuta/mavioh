@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.ErrorLogic;
 import model.ForumLogic;
 import resource.ExitStatus;
-import setting.Setting;
 
 
 /**
@@ -23,34 +23,28 @@ public class ForumServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * コメント一覧を含めた掲示板を表示する関数
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// コメント一覧の読みだしに成功した場合
-		if (ForumLogic.setCommentList(request) == ExitStatus.NORMAL) {
-			// 掲示板トップ画面へフォワード
+		if (ForumLogic.prepareCommentList(request) == ExitStatus.NORMAL || ErrorLogic.isNormalError(request) == true) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/forum/forumTop.jsp");
 			requestDispatcher.forward(request, response);
-		}  // 失敗した場合
+		}
 		else {
-			// エラー画面へリダイレクト
-			response.sendRedirect(Setting.ERROR_URL);
+			response.sendRedirect("ErrorServlet");
 		}
 	}
 
 	/**
-	 * 投稿されたコメントを保存する関数
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (ForumLogic.create(request) == ExitStatus.NORMAL) {
+		if (ForumLogic.create(request) == ExitStatus.NORMAL || ErrorLogic.isNormalError(request) == true) {
 			doGet(request, response);
 		}
 		else {
-			// エラー画面へフォワード
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher(Setting.ERROR_URL);
-			requestDispatcher.forward(request, response);
+			response.sendRedirect("ErrorServlet");
 		}
-
 	}
 
 }
