@@ -25,10 +25,20 @@ public class StudentLogic {
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String school = request.getParameter("school");
+		float deviationValue;
 
-		if (ValidationLogic.validateStudent(name, school, request.getParameter("deviationValue")) == ExitStatus.NORMAL) {
-			float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+		try {
+			deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+		}
+		catch (Exception exception) {
+			ErrorLogic.setErrorInformation(
+					request, "入力が不正です。名前は" + Setting.MAX_STUDENT_NAME_LENGTH + "文字以内、高校名は" +
+					Setting.MAX_STUDENT_SCHOOL_LENGTH + "文字以内、偏差値は3桁(小数第1位まで)で入力してください。");
 
+			return ExitStatus.ABNORMAL;
+		}
+
+		if (ValidationLogic.validateStudent(name, school) == ExitStatus.NORMAL) {
 			// 第一引数(主キー)は指定する必要がないため、仮の数
 			Student student = new Student(-1, name, grade, gender, school, deviationValue);
 
@@ -65,10 +75,20 @@ public class StudentLogic {
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String school = request.getParameter("school");
+		float deviationValue;
 
-		if (ValidationLogic.validateStudent(name, school, request.getParameter("deviationValue")) == ExitStatus.NORMAL) {
-			float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+		try {
+			deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+		}
+		catch (Exception exception) {
+			ErrorLogic.setErrorInformation(
+					request, "入力が不正です。名前は" + Setting.MAX_STUDENT_NAME_LENGTH + "文字以内、高校名は" +
+					Setting.MAX_STUDENT_SCHOOL_LENGTH + "文字以内、偏差値は3桁(小数第1位まで)で入力してください。");
 
+			return ExitStatus.ABNORMAL;
+		}
+
+		if (ValidationLogic.validateStudent(name, school) == ExitStatus.NORMAL) {
 			Student student = new Student(id, name, grade, gender, school, deviationValue);
 
 			return StudentDAO.update(student);

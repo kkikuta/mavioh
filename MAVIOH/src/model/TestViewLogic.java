@@ -26,16 +26,25 @@ public class TestViewLogic {
 	public static boolean prepareTest(HttpServletRequest request) {
 		List<WordData> wordDataList = new ArrayList<>();
 		List<Integer> usedNumbers = new ArrayList<>();
+		int startPosition, endPosition;  // テストする範囲の開始位置と終了位置
 
-		if (ValidationLogic.validateTestRange(request.getParameter("startPosition"), request.getParameter("endPosition"))
-				== ExitStatus.ABNORMAL) {
-			ErrorLogic.setErrorInformation(request, "範囲が不正です。1～1900の中の範囲で入力してください。");
+		try {
+			startPosition = Integer.parseInt(request.getParameter("startPosition"));
+			endPosition = Integer.parseInt(request.getParameter("endPosition"));
+		}
+		catch (Exception exception) {
+			ErrorLogic.setErrorInformation(request, "範囲が不正です。1～1900の中の範囲の数で入力してください。");
+
+			return ExitStatus.ABNORMAL;
+		}
+
+
+		if (ValidationLogic.validateTestRange(startPosition, endPosition) == ExitStatus.ABNORMAL) {
+			ErrorLogic.setErrorInformation(request, "範囲が不正です。1～1900の中の範囲の数で入力してください。");
 
 			return ExitStatus.ABNORMAL;
 		}
 		else {
-			int startPosition = Integer.parseInt(request.getParameter("stringStartPosition"));
-			int endPosition = Integer.parseInt(request.getParameter("stringEndPosition"));
 			int questionNumber = 1;  // 問題番号
 
 			while (true) {
