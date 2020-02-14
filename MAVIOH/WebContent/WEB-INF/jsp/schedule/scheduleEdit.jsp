@@ -12,15 +12,12 @@
 <div class="mainContent">
 	<jsp:include page="../layout/mainLinks.jsp" />
 
-	<!-- 表示中のイベントの日にち -->
-	<c:out value="${event.date}" /><br>
-
-	<!-- イベント詳細 -->
-	<c:out value="${event.title}" /><br>
-	<c:out value="${event.detail}" /><br>
-
 	<!-- 編集リンク -->
 	<form class="postForm" name="editLink" action="ScheduleServlet" method="post">
+
+		<!-- 表示中のイベントの日にち -->
+		<c:out value="${event.date}" /><br>
+
 		<jsp:include page="../error/errorInformation.jsp" />
 		<input type="hidden" name="process" value="executeEdit">
 		<input type="hidden" name="id" value="${event.id}">

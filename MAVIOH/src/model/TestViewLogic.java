@@ -26,56 +26,46 @@ public class TestViewLogic {
 	public static boolean prepareTest(HttpServletRequest request) {
 		List<WordData> wordDataList = new ArrayList<>();
 		List<Integer> usedNumbers = new ArrayList<>();
-		int startPosition;
-		int endPosition;
 
-		if (request.getParameter("startPosition") == null || request.getParameter("endPosition") == null) {
-			ErrorLogic.setErrorInformation(request, "範囲が入力されていません。");
+		if (ValidationLogic.validateTestRange(request.getParameter("startPosition"), request.getParameter("endPosition"))
+				== ExitStatus.ABNORMAL) {
+			ErrorLogic.setErrorInformation(request, "範囲が不正です。1～1900の中の範囲で入力してください。");
 
 			return ExitStatus.ABNORMAL;
 		}
 		else {
-			startPosition = Integer.parseInt(request.getParameter("startPosition"));
-			endPosition = Integer.parseInt(request.getParameter("endPosition"));
+			int startPosition = Integer.parseInt(request.getParameter("stringStartPosition"));
+			int endPosition = Integer.parseInt(request.getParameter("stringEndPosition"));
+			int questionNumber = 1;  // 問題番号
 
-			if (ValidationLogic.validateTestRange(startPosition, endPosition) == ExitStatus.ABNORMAL) {
-				ErrorLogic.setErrorInformation(request, "入力が不正です。1～1900の中の範囲で入力してください。");
+			while (true) {
+				Random random = new Random();
+				int randomNumber = random.nextInt(endPosition - startPosition + 1) + startPosition;
 
-				return ExitStatus.ABNORMAL;
-			}  // 入力値が正しい場合、単語テスト用のデータを用意して保存
-			else {
-				int number = 1;
+				// 同じ単語ならスキップ
+				if (usedNumbers.contains(Integer.valueOf(randomNumber))) {
+					continue;
+				}
+				else {
+					String word = WordsAndMeanings.words[randomNumber];
+					String meaning = WordsAndMeanings.meanings[randomNumber];
 
-				while (true) {
-					Random random = new Random();
-					int randomNumber = random.nextInt(endPosition - startPosition + 1) + startPosition;
+					WordData wd = new WordData(questionNumber, word, meaning);
+					wordDataList.add(wd);
+					usedNumbers.add(Integer.valueOf(randomNumber));
 
-					// 同じ単語ならスキップ
-					if (usedNumbers.contains(Integer.valueOf(randomNumber))) {
-						continue;
-					}
-					else {
-						String word = WordsAndMeanings.words[randomNumber];
-						String meaning = WordsAndMeanings.meanings[randomNumber];
+					questionNumber++;
 
-						WordData wd = new WordData(number, word, meaning);
-						wordDataList.add(wd);
-						usedNumbers.add(Integer.valueOf(randomNumber));
-
-						number++;
-
-						// 指定の個数やったら終了
-						if (wordDataList.size() >= Setting.NUMBER_OF_QUESTION) {
-							break;
-						}
+					// 指定の個数やったら終了
+					if (wordDataList.size() >= Setting.NUMBER_OF_QUESTION) {
+						break;
 					}
 				}
 
 				HttpSession session = request.getSession();
 				session.setAttribute("wordDataList", wordDataList);
-
-				return ExitStatus.NORMAL;
 			}
+			return ExitStatus.NORMAL;
 		}
 	}
 }

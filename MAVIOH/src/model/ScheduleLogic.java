@@ -30,13 +30,12 @@ public class ScheduleLogic {
 		String detail = request.getParameter("detail");
 		int year = Integer.parseInt(request.getParameter("year"));
 		int month = Integer.parseInt(request.getParameter("month"));
-		int date = Integer.parseInt(request.getParameter("date"));
 
-		if (ValidationLogic.validateEvent(title, detail) == ExitStatus.NORMAL) {
+		if (ValidationLogic.validateEvent(title, detail, request.getParameter("date")) == ExitStatus.NORMAL) {
+			int date = Integer.parseInt(request.getParameter("date"));
+
 			final String FORMAT = "%4d-%02d-%02d";  // DBに保存する日時の形式
-
 			String stringDate = String.format(FORMAT, year, month, date);
-
 			Date sqlDate = Date.valueOf(stringDate);
 
 			Event event = new Event(-1, title, detail, sqlDate);

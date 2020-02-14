@@ -29,17 +29,17 @@ public class CommentDAO {
 		try (Connection connection = DriverManager.getConnection(
 				Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
 
-			String sql = "SELECT * FROM COMMENTS ORDER BY ID DESC";
+			String sql = "SELECT * FROM comments ORDER BY id DESC";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next() == DBStatus.RECORD_EXIST) {
-				int id = resultSet.getInt("ID");
-				String title = resultSet.getString("TITLE");
-				String body = resultSet.getString("BODY");
-				int userId = resultSet.getInt("USER_ID");
-				String postTime = resultSet.getString("POST_TIME");
+				int id = resultSet.getInt("id");
+				String title = resultSet.getString("title");
+				String body = resultSet.getString("body");
+				int userId = resultSet.getInt("user_id");
+				String postTime = resultSet.getString("post_time");
 
 				Comment comment = new Comment(id, title, body, userId, postTime);
 				commentList.add(comment);

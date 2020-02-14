@@ -27,7 +27,7 @@ public class ValidationLogic {
 	 * @return 入力値の有効性
 	 */
 	public static boolean validateInput(String value) {
-		if (value.isEmpty() == true) {
+		if (value.isEmpty() == true || value == null) {
 			return ExitStatus.ABNORMAL;
 		}
 		return ExitStatus.NORMAL;
@@ -80,14 +80,34 @@ public class ValidationLogic {
 	}
 
 	/**
-	 * 生徒情報の入力値を検証する関数
-	 * @param 名前 生徒の名前
-	 * @param school 高校名
+	 * イベントの入力値を検証する関数
+	 * @param title タイトル
+	 * @param detail 詳細
+	 * @param date 日にち
 	 * @return 入力値の有効性
 	 */
-	public static boolean validateStudent(String name, String school) {
+	public static boolean validateEvent(String title, String detail, String date) {
+		if (validate(title, Setting.MAX_EVENT_TITLE_LENGTH) == ExitStatus.NORMAL &&
+				validate(title, Setting.MAX_EVENT_DETAIL_LENGTH) == ExitStatus.NORMAL &&
+				validateInput(date) == ExitStatus.NORMAL) {
+			return ExitStatus.NORMAL;
+		}
+		else {
+			return ExitStatus.ABNORMAL;
+		}
+	}
+
+	/**
+	 * 生徒情報の入力値を検証する関数
+	 * @param name 生徒の名前
+	 * @param school 高校名
+	 * @param stringDeviationValue 偏差値
+	 * @return 入力値の有効性
+	 */
+	public static boolean validateStudent(String name, String school, String stringDeviationValue) {
 		if (validate(name, Setting.MAX_STUDENT_NAME_LENGTH) == ExitStatus.NORMAL &&
-				validate(school, Setting.MAX_STUDENT_SCHOOL_LENGTH) == ExitStatus.NORMAL) {
+				validate(school, Setting.MAX_STUDENT_SCHOOL_LENGTH) == ExitStatus.NORMAL &&
+				validateInput(stringDeviationValue) == ExitStatus.NORMAL) {
 			return ExitStatus.NORMAL;
 		}
 		else {
@@ -97,18 +117,22 @@ public class ValidationLogic {
 
 	/**
 	 * テストの問題番号の範囲を検証する関数
-	 * @param startPosition 開始位置の番号
-	 * @param endPosition 終了位置の番号
-	 * @return 入力値の有効性
+	 * @param stringStartPosition 開始位置の番号
+	 * @param stringEndPosition 終了位置の番号
+	 * @return 範囲の有効性
 	 */
-	public static boolean validateTestRange(int startPosition, int endPosition) {
-		if (endPosition - startPosition + 1 >= Setting.NUMBER_OF_QUESTION &&
-				startPosition > 0 && startPosition <= Setting.LAST_POSITION_OF_QUESTION &&
-				endPosition > 0 && endPosition <= Setting.LAST_POSITION_OF_QUESTION) {
-			return ExitStatus.NORMAL;
+	public static boolean validateTestRange(String stringStartPosition, String stringEndPosition) {
+		if (validateInput(stringStartPosition) == ExitStatus.NORMAL && validateInput(stringEndPosition) == ExitStatus.NORMAL) {
+			int startPosition = Integer.parseInt(stringStartPosition);
+			int endPosition = Integer.parseInt(stringEndPosition);
+
+			if (endPosition - startPosition + 1 >= Setting.NUMBER_OF_QUESTION &&
+					startPosition > 0 && startPosition <= Setting.LAST_POSITION_OF_QUESTION &&
+					endPosition > 0 && endPosition <= Setting.LAST_POSITION_OF_QUESTION) {
+				return ExitStatus.NORMAL;
+			}
 		}
-		else {
-			return ExitStatus.ABNORMAL;
-		}
+		return ExitStatus.ABNORMAL;
 	}
+
 }

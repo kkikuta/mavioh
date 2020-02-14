@@ -33,13 +33,12 @@ public class UserDAO {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// ユーザーが見つかった場合
 			if (resultSet.next() == DBStatus.RECORD_EXIST) {
 				int id = resultSet.getInt("ID");
 				User user = new User(id, userName, password);
 
 				return user;
-			}  // ユーザーが見つからなかった場合
+			}
 			else {
 				return null;
 			}
@@ -59,15 +58,14 @@ public class UserDAO {
 		List<User> userList = new ArrayList<>();  // 全ユーザーを格納するリスト
 
 		try (Connection connection = DriverManager.getConnection(Setting.JDBC_URL, Setting.DB_USER, Setting.DB_PASSWORD)) {
-			String sql = "SELECT * FROM USERS";
+			String sql = "SELECT * FROM users";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// 取得した全ユーザーを格納
 			while (resultSet.next() == DBStatus.RECORD_EXIST) {
-				int id = resultSet.getInt("ID");
-				String name = resultSet.getString("NAME");
+				int id = resultSet.getInt("id");
+				String name = resultSet.getString("name");
 				String password = resultSet.getString("password");
 
 				User user = new User(id, name, password);

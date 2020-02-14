@@ -37,4 +37,21 @@ public class LoginLogic {
 			return ExitStatus.ABNORMAL;
 		}
 	}
+
+	/**
+	 * ログインしているかどうかを確認する関数
+	 * @param request HttpServletRequest
+	 * @return ログインしているかどうか
+	 */
+	public static boolean isLogin(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		User loginUser = (User) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 }

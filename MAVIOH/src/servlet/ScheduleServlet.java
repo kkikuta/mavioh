@@ -66,7 +66,7 @@ public class ScheduleServlet extends HttpServlet {
 				doGet(request, response);
 			}
 			else if (ErrorLogic.isNormalError(request) == true) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/schedule/scheduleEdit.jsp");
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("WEB-INF/jsp/schedule/scheduleCreate.jsp");
 				requestDispatcher.forward(request, response);
 			}
 		}

@@ -25,9 +25,10 @@ public class StudentLogic {
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String school = request.getParameter("school");
-		float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
 
-		if (ValidationLogic.validateStudent(name, school) == ExitStatus.NORMAL) {
+		if (ValidationLogic.validateStudent(name, school, request.getParameter("deviationValue")) == ExitStatus.NORMAL) {
+			float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+
 			// 第一引数(主キー)は指定する必要がないため、仮の数
 			Student student = new Student(-1, name, grade, gender, school, deviationValue);
 
@@ -64,9 +65,10 @@ public class StudentLogic {
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int gender = Integer.parseInt(request.getParameter("gender"));
 		String school = request.getParameter("school");
-		float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
 
-		if (ValidationLogic.validateStudent(name, school) == ExitStatus.NORMAL) {
+		if (ValidationLogic.validateStudent(name, school, request.getParameter("deviationValue")) == ExitStatus.NORMAL) {
+			float deviationValue = Float.parseFloat(request.getParameter("deviationValue"));
+
 			Student student = new Student(id, name, grade, gender, school, deviationValue);
 
 			return StudentDAO.update(student);

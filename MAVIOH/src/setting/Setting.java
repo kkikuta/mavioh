@@ -21,7 +21,6 @@ public class Setting {
 	public static final String DB_PASSWORD = "156598e79afc61725fab4e61184d5f5c870d8ea802ec47d38aeeb27558a088b5";
 	//public static final String DB_PASSWORD = "";
 
-
 	/** エラー時の遷移先URL({@value}) */
 	public static final String ERROR_URL = "/WEB-INF/jsp/error/error.jsp";
 
